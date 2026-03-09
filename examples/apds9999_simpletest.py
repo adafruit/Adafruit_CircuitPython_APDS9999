@@ -20,7 +20,6 @@ apds_sensor.rgb_mode = True
 
 while True:
     time.sleep(1)
-    print(apds_sensor.main_status)
     r, g, b, ir = apds_sensor.rgb_ir
 
     print(
