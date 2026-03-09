@@ -483,8 +483,8 @@ class APDS9999:
         if self._part_id != _APDS9999_PART_ID:
             raise RuntimeError(
                 "Failed to find APDS9999 check your wiring! "
-                f"Expected PART_ID 0x{_APDS9999_PART_ID:02X}, "
-                f"got 0x{self._part_id:02X}."
+                + f"Expected PART_ID 0x{_APDS9999_PART_ID:02X}, "
+                + f"got 0x{self._part_id:02X}."
             )
 
         # Stores the overflow bit captured during the last proximity read.
