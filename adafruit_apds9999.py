@@ -757,7 +757,7 @@ class APDS9999:
         time.sleep(0.01)
 
     @property
-    def main_status(self) -> "Tuple[bool, bool, bool, bool, bool, bool]":
+    def main_status(self) -> Tuple[bool, bool, bool, bool, bool, bool]:
         """Read all status flags from the MAIN_STATUS register in a single I2C transaction.
 
         .. warning::
@@ -785,7 +785,7 @@ class APDS9999:
         )
 
     @property
-    def rgb_ir(self) -> "Tuple[int, int, int, int]":
+    def rgb_ir(self) -> Tuple[int, int, int, int]:
         """All four light sensor channels as a tuple ``(red, green, blue, ir)``.
 
         Each value is up to 20-bit count (0–1048575) read in a single 12-byte
@@ -800,7 +800,7 @@ class APDS9999:
         return r, g, b, ir
 
     @property
-    def rgb(self) -> "Tuple[int, int, int]":
+    def rgb(self) -> Tuple[int, int, int]:
         """The RGB light sensor channels as a tuple ``(red, green, blue)``
         mapped to the range 0-255. For full 20bit resolution set
         ``light_resolution`` to ``LightResolution.RES_20BIT`` and use
