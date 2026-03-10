@@ -307,6 +307,44 @@ class ProximityResolution(CV):
     RES_11BIT = 0x03  # 11-bit resolution
 
 
+class ProximityMeasurementRate(CV):
+    """Proximity sensor measurement rate settings for the PS_MEAS_RATE register (0x03), bits 2:0.
+
+    Controls how frequently the proximity sensor takes a reading.
+
+    .. note::
+        CircuitPython makes no guarantee about realtime
+        behavior, the faster measurement rates may take
+        longer than indicated.
+
+    +--------------------------------------------------+-------------------+
+    | Setting                                          | Rate              |
+    +==================================================+===================+
+    | :py:const:`ProximityMeasurementRate.RATE_6MS`    | 6.25 ms           |
+    +--------------------------------------------------+-------------------+
+    | :py:const:`ProximityMeasurementRate.RATE_12MS`   | 12.5 ms           |
+    +--------------------------------------------------+-------------------+
+    | :py:const:`ProximityMeasurementRate.RATE_25MS`   | 25 ms             |
+    +--------------------------------------------------+-------------------+
+    | :py:const:`ProximityMeasurementRate.RATE_50MS`   | 50 ms             |
+    +--------------------------------------------------+-------------------+
+    | :py:const:`ProximityMeasurementRate.RATE_100MS`  | 100 ms (default)  |
+    +--------------------------------------------------+-------------------+
+    | :py:const:`ProximityMeasurementRate.RATE_200MS`  | 200 ms            |
+    +--------------------------------------------------+-------------------+
+    | :py:const:`ProximityMeasurementRate.RATE_400MS`  | 400 ms            |
+    +--------------------------------------------------+-------------------+
+    """
+
+    RATE_6MS = 0x01  # 6.25 ms measurement rate
+    RATE_12MS = 0x02  # 12.5 ms measurement rate
+    RATE_25MS = 0x03  # 25 ms measurement rate
+    RATE_50MS = 0x04  # 50 ms measurement rate
+    RATE_100MS = 0x05  # 100 ms measurement rate (default)
+    RATE_200MS = 0x06  # 200 ms measurement rate
+    RATE_400MS = 0x07  # 400 ms measurement rate
+
+
 class LightGain(CV):
     """Light sensor gain settings for the LS_GAIN register (0x05).
 
@@ -400,6 +438,9 @@ class APDS9999:
 
     # PS_MEAS_RATE register (0x03), bits 4:3 ADC resolution of the proximity sensor.
     _proximity_resolution = RWBits(2, _APDS9999_REG_PS_MEAS_RATE, 3)
+
+    # PS_MEAS_RATE register (0x03), bits 2:0 measurement rate of the proximity sensor.
+    _proximity_measurement_rate = RWBits(3, _APDS9999_REG_PS_MEAS_RATE, 0)
 
     # PS_DATA_0/1 registers (0x08-0x09) raw 16-bit proximity data word, little-endian.
     # Bits 10:0 are the 11-bit proximity count; bit 11 is the overflow flag.
@@ -571,6 +612,33 @@ class APDS9999:
         if not ProximityResolution.is_valid(value):
             raise ValueError("proximity_resolution must be a ProximityResolution value")
         self._proximity_resolution = value
+
+    @property
+    def proximity_measurement_rate(self) -> int:
+        """How frequently the proximity sensor takes a reading.
+
+        Must be a :class:`ProximityMeasurementRate` value:
+
+        * ``ProximityMeasurementRate.RATE_6MS``   6.25 ms
+        * ``ProximityMeasurementRate.RATE_12MS``  12.5 ms
+        * ``ProximityMeasurementRate.RATE_25MS``  25 ms
+        * ``ProximityMeasurementRate.RATE_50MS``  50 ms
+        * ``ProximityMeasurementRate.RATE_100MS`` 100 ms (default)
+        * ``ProximityMeasurementRate.RATE_200MS`` 200 ms
+        * ``ProximityMeasurementRate.RATE_400MS`` 400 ms
+
+        .. note::
+            CircuitPython makes no guarantee about realtime
+            behavior, the faster measurement rates may take
+            longer than indicated.
+        """
+        return self._proximity_measurement_rate
+
+    @proximity_measurement_rate.setter
+    def proximity_measurement_rate(self, value: int) -> None:
+        if not ProximityMeasurementRate.is_valid(value):
+            raise ValueError("proximity_measurement_rate must be a ProximityMeasurementRate value")
+        self._proximity_measurement_rate = value
 
     @property
     def proximity(self) -> int:
