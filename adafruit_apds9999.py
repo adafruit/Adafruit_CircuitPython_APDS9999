@@ -336,7 +336,7 @@ class ProximityMeasurementRate(CV):
     +--------------------------------------------------+-------------------+
     """
 
-    RATE_6MS = 0x01   # 6.25 ms measurement rate (~19 ms actual)
+    RATE_6MS = 0x01  # 6.25 ms measurement rate
     RATE_12MS = 0x02  # 12.5 ms measurement rate
     RATE_25MS = 0x03  # 25 ms measurement rate
     RATE_50MS = 0x04  # 50 ms measurement rate
@@ -637,9 +637,7 @@ class APDS9999:
     @proximity_measurement_rate.setter
     def proximity_measurement_rate(self, value: int) -> None:
         if not ProximityMeasurementRate.is_valid(value):
-            raise ValueError(
-                "proximity_measurement_rate must be a ProximityMeasurementRate value"
-            )
+            raise ValueError("proximity_measurement_rate must be a ProximityMeasurementRate value")
         self._proximity_measurement_rate = value
 
     @property
