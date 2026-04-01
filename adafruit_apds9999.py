@@ -423,9 +423,15 @@ class APDS9999:
 
     # MAIN_CTRL register (0x00), bit 6 sleep after proximity interrupt.
     proximity_sleep_after_interrupt = RWBit(_APDS9999_REG_MAIN_CTRL, 6)
+    """Disable the proximity sensor after interrupt. You must also read ``main_status``
+    after the interrupt for the sleep to take effect. Once asleep, the sensor can be
+    re-enabled with ``proximity_sensor_enabled``"""
 
     # MAIN_CTRL register (0x00), bit 5 sleep after light interrupt.
     light_sleep_after_interrupt = RWBit(_APDS9999_REG_MAIN_CTRL, 5)
+    """Disable the light sensor after interrupt. You must also read ``main_status``
+    after the interrupt for the sleep to take effect. Once asleep, the sensor can be
+    re-enabled with ``light_sensor_enabled``"""
 
     # LS_GAIN register (0x05), bits 2:0 analogue gain for the light sensor channels.
     _light_gain = RWBits(3, _APDS9999_REG_LS_GAIN, 0)
@@ -449,8 +455,10 @@ class APDS9999:
     # INT_CFG register (0x19), bit 0 enables the proximity sensor interrupt.
     proximity_interrupt_enabled = RWBit(_APDS9999_REG_INT_CFG, 0)
 
-    # INT_CFG register (0x19), bit 1 proximity logic mode
-    # (True = inside window, False = outside window).
+    # INT_CFG register (0x19), bit 1 proximity logic mode.
+    # False (default): Normal interrupt — INT latches active-low until MAIN_STATUS is read.
+    # True: PS Logic Output Mode — INT is updated after every measurement and reflects
+    # the current comparison state (no latching).
     proximity_logic_mode = RWBit(_APDS9999_REG_INT_CFG, 1)
 
     # INT_CFG register (0x19), bit 2 enables the light sensor interrupt.
@@ -823,6 +831,12 @@ class APDS9999:
         """
         self._reset = True
         time.sleep(0.01)
+
+        # first read after reset will time out
+        try:
+            _ = self.proximity_cancellation
+        except OSError:
+            pass
 
     @property
     def main_status(self) -> Tuple[bool, bool, bool, bool, bool, bool]:
