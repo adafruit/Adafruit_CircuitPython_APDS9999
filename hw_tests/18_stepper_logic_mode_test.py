@@ -83,8 +83,8 @@ pass_logic_on_no_latch = False
 print()
 print("=== PART A: Logic OFF (Latching) ===")
 
-sensor.proximity_logic_mode = False
-print(f"Mode: {'ON' if sensor.proximity_logic_mode else 'OFF'}")
+sensor._proximity_logic_mode = False
+print(f"Mode: {'ON' if sensor._proximity_logic_mode else 'OFF'}")
 
 _ = sensor.main_status
 time.sleep(0.2)
@@ -143,8 +143,8 @@ print(f"  Clear test: {'PASS' if pass_logic_off_clear else 'FAIL'}")
 print()
 print("=== PART B: Logic ON (Real-time) ===")
 
-sensor.proximity_logic_mode = True
-print(f"Mode: {'ON' if sensor.proximity_logic_mode else 'OFF'}")
+sensor._proximity_logic_mode = True
+print(f"Mode: {'ON' if sensor._proximity_logic_mode else 'OFF'}")
 
 _ = sensor.main_status
 time.sleep(0.2)

@@ -414,12 +414,15 @@ class APDS9999:
 
     # MAIN_CTRL register (0x00), bit 1 enables the light (ALS/RGB) sensor.
     light_sensor_enabled = RWBit(_APDS9999_REG_MAIN_CTRL, 1)
+    """Enable or disable the light sensor"""
 
     # MAIN_CTRL register (0x00), bit 0 enables the proximity sensor.
     proximity_sensor_enabled = RWBit(_APDS9999_REG_MAIN_CTRL, 0)
+    """Enable or disable the proximity sensor"""
 
     # MAIN_CTRL register (0x00), bit 2 selects RGB mode (True) vs ALS mode (False).
     rgb_mode = RWBit(_APDS9999_REG_MAIN_CTRL, 2)
+    """Enable or disable RGB mode. True is RGB mode, False is ALS mode"""
 
     # MAIN_CTRL register (0x00), bit 6 sleep after proximity interrupt.
     proximity_sleep_after_interrupt = RWBit(_APDS9999_REG_MAIN_CTRL, 6)
@@ -454,19 +457,27 @@ class APDS9999:
 
     # INT_CFG register (0x19), bit 0 enables the proximity sensor interrupt.
     proximity_interrupt_enabled = RWBit(_APDS9999_REG_INT_CFG, 0)
+    """Enable or disable the proximity interrupt. You must also read ``main_status`` after the
+interrupt is triggered to reset it."""
 
     # INT_CFG register (0x19), bit 1 proximity logic mode.
+    # Intended behavior from datasheet:
     # False (default): Normal interrupt — INT latches active-low until MAIN_STATUS is read.
     # True: PS Logic Output Mode — INT is updated after every measurement and reflects
     # the current comparison state (no latching).
-    proximity_logic_mode = RWBit(_APDS9999_REG_INT_CFG, 1)
+    #
+    # Observed behavior does not match. INT pin seems stuck triggered
+    # when PS Logic Output Mode is used.
+    _proximity_logic_mode = RWBit(_APDS9999_REG_INT_CFG, 1)
 
     # INT_CFG register (0x19), bit 2 enables the light sensor interrupt.
     light_interrupt_enabled = RWBit(_APDS9999_REG_INT_CFG, 2)
+    """Enable or disable the light sensor interrupt"""
 
     # INT_CFG register (0x19), bit 3 selects variance mode
     # (True) vs threshold mode (False) for the light interrupt.
     light_variance_mode = RWBit(_APDS9999_REG_INT_CFG, 3)
+    """Variance mode (True) vs threshold mode (False) for the light interrupt."""
 
     # INT_CFG register (0x19), bits 5:4 selects which light channel
     # is compared against the interrupt thresholds.
@@ -482,15 +493,19 @@ class APDS9999:
 
     # PS_THRES_UP_0/1 registers (0x1B-0x1C) 11-bit upper proximity interrupt threshold.
     proximity_threshold_high = RWBits(11, _APDS9999_REG_PS_THRES_UP_0, 0, register_width=2)
+    """Proximity threshold high 11 bits"""
 
     # PS_THRES_LOW_0/1 registers (0x1D-0x1E) 11-bit lower proximity interrupt threshold.
     proximity_threshold_low = RWBits(11, _APDS9999_REG_PS_THRES_LOW_0, 0, register_width=2)
+    """Proximity threshold low 11 bits"""
 
     # LS_THRES_UP_0/1/2 registers (0x21-0x23) 20-bit upper light sensor interrupt threshold.
     light_threshold_high = RWBits(20, _APDS9999_REG_LS_THRES_UP_0, 0, register_width=3)
+    """Light threshold high 20 bits"""
 
     # LS_THRES_LOW_0/1/2 registers (0x24-0x26) 20-bit lower light sensor interrupt threshold.
     light_threshold_low = RWBits(20, _APDS9999_REG_LS_THRES_LOW_0, 0, register_width=3)
+    """Light threshold low 20 bits"""
 
     # LS_THRES_VAR register (0x27), bits 2:0 variance threshold for light interrupt.
     _light_variance = RWBits(3, _APDS9999_REG_LS_THRES_VAR, 0)
@@ -499,10 +514,12 @@ class APDS9999:
     # level. Bits 7:3 of PS_CAN_1 (analog cancellation) are preserved by the RWBits
     # read-modify-write.
     proximity_cancellation = RWBits(11, _APDS9999_REG_PS_CAN_0, 0, register_width=2)
+    """Digital proximity cancellation level 11 bits"""
 
     # PS_CAN_1 register (0x20), bits 7:3 5-bit analog proximity cancellation level.
     # Bits 2:0 of PS_CAN_1 (digital cancellation high bits) are preserved by RWBits.
     proximity_analog_cancellation = RWBits(5, _APDS9999_REG_PS_CAN_1, 3)
+    """Analog proximity cancellation level 5 bits"""
 
     # MAIN_STATUS register (0x07), bits 5:0 all status flags in one read.
     # Reading this register clears all status bits.
@@ -516,6 +533,7 @@ class APDS9999:
 
     # PS_PULSES register (0x02) number of LED pulses emitted per proximity measurement.
     led_pulses = UnaryStruct(_APDS9999_REG_PS_PULSES, "B")
+    """number of LED pulses emitted per proximity measurement"""
 
     # LS_DATA registers (0x0A-0x15) all 12 bytes of light sensor data read as a
     # single 96-bit value.  With lsb_first=True the channels sit at:
@@ -841,6 +859,7 @@ class APDS9999:
     @property
     def main_status(self) -> Tuple[bool, bool, bool, bool, bool, bool]:
         """Read all status flags from the MAIN_STATUS register in a single I2C transaction.
+        Main status must be read after an interrupt is triggered to reset the interrupt.
 
         .. warning::
             Reading this register clears all status bits on the device.

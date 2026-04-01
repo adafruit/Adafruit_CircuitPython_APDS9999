@@ -105,8 +105,8 @@ else:
 print()
 print("=== PHASE 2: LOGIC MODE OFF (LATCHING) ===")
 
-sensor.proximity_logic_mode = False
-print(f"Logic mode set to OFF: {'OK' if not sensor.proximity_logic_mode else 'FAIL'}")
+sensor._proximity_logic_mode = False
+print(f"Logic mode set to OFF: {'OK' if not sensor._proximity_logic_mode else 'FAIL'}")
 
 sensor.proximity_threshold_low = 0
 sensor.proximity_threshold_high = threshold
@@ -175,8 +175,8 @@ _ = sensor.main_status  # Clear for next phase
 print()
 print("=== PHASE 3: LOGIC MODE ON (FOLLOWING) ===")
 
-sensor.proximity_logic_mode = True
-print(f"Logic mode set to ON: {'OK' if sensor.proximity_logic_mode else 'FAIL'}")
+sensor._proximity_logic_mode = True
+print(f"Logic mode set to ON: {'OK' if sensor._proximity_logic_mode else 'FAIL'}")
 
 _ = sensor.main_status  # Clear
 time.sleep(0.1)
