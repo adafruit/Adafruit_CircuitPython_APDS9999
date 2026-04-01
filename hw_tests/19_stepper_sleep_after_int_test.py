@@ -11,8 +11,8 @@ Hardware setup:
 - Start position: reflector in front of (close to) sensor
 - INT pin connected to D8 (with pull-up)
 
-SAI mode puts sensor into standby after an interrupt fires.
-Useful for power saving - sensor sleeps until MCU acknowledges by reading status.
+SAI mode puts sensor into standby after an interrupt fires and status is read.
+Useful for power saving - sensor sleeps until re-enabled with the enabled property
 """
 
 import time
@@ -124,30 +124,30 @@ print()
 sensor.reset()
 time.sleep(0.1)
 
+# Move reflector away first
+step_motor(HALF_ROT, direction=True)
+time.sleep(0.5)
+
 sensor.proximity_sensor_enabled = True
 sensor.proximity_sleep_after_interrupt = True
-sensor.proximity_threshold_low = 10
+sensor.proximity_threshold_low = 0
 sensor.proximity_threshold_high = 20
 sensor.proximity_persistence = 1
 sensor.proximity_interrupt_enabled = True
-
+time.sleep(0.5)
 print("status", sensor.main_status)
 print("Config: Prox enabled, SAI=true, thresh low=10, high=20")
 print()
 
-print(f"enabled still? {sensor.proximity_sensor_enabled}")
 
 # Step B1: Verify readings update before interrupt
 print("Step B1: Verify readings update (before interrupt)")
-# Move reflector away first
-step_motor(HALF_ROT, direction=True)
-time.sleep(0.5)
-print(f"enabled still? {sensor.proximity_sensor_enabled}")
 prox1 = sensor.proximity
 time.sleep(0.2)
 prox2 = sensor.proximity
 print(f"  Prox reading 1: {prox1}")
 print(f"  Prox reading 2: {prox2}")
+_ = sensor.main_status
 data_valid = prox1 < 1000 and prox2 < 1000
 print(f"  Data valid: {'PASS' if data_valid else 'FAIL'}")
 if data_valid:
@@ -155,7 +155,8 @@ if data_valid:
 else:
     fail_count += 1
 print()
-print(f"enabled still? {sensor.proximity_sensor_enabled}")
+
+
 # Step B2: Trigger interrupt with stepper (move reflector close)
 print("Step B2: Trigger interrupt (move reflector close)")
 step_motor(HALF_ROT, direction=False)
@@ -163,6 +164,10 @@ time.sleep(1.0)
 
 int_triggered = not int_pin.value
 print(f"  Interrupt fired: {'YES (PASS)' if int_triggered else 'NO (FAIL)'}")
+
+# read status to trigger sleep
+_ = sensor.main_status
+
 if int_triggered:
     pass_count += 1
 else:
@@ -196,6 +201,11 @@ print()
 print("Step B4: Move reflector away, then clear interrupt")
 step_motor(HALF_ROT, direction=True)
 time.sleep(0.5)
+
+# proximity sensor expected to be disabled by sleep after interrupt
+print(f"Proximity Sensor Enabled: {sensor.proximity_sensor_enabled}")
+sensor.proximity_sensor_enabled = True
+print(f"Proximity Sensor Enabled: {sensor.proximity_sensor_enabled}")
 status = sensor.main_status
 print("  Reflector moved away, interrupt cleared")
 print()

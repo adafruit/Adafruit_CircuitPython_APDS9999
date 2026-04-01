@@ -423,9 +423,15 @@ class APDS9999:
 
     # MAIN_CTRL register (0x00), bit 6 sleep after proximity interrupt.
     proximity_sleep_after_interrupt = RWBit(_APDS9999_REG_MAIN_CTRL, 6)
+    """Disable the proximity sensor after interrupt. You must also read ``main_status``
+    after the interrupt for the sleep to take effect. Once asleep, the sensor can be
+    re-enabled with ``proximity_sensor_enabled``"""
 
     # MAIN_CTRL register (0x00), bit 5 sleep after light interrupt.
     light_sleep_after_interrupt = RWBit(_APDS9999_REG_MAIN_CTRL, 5)
+    """Disable the light sensor after interrupt. You must also read ``main_status``
+    after the interrupt for the sleep to take effect. Once asleep, the sensor can be
+    re-enabled with ``light_sensor_enabled``"""
 
     # LS_GAIN register (0x05), bits 2:0 analogue gain for the light sensor channels.
     _light_gain = RWBits(3, _APDS9999_REG_LS_GAIN, 0)
