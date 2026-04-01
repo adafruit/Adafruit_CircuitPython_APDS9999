@@ -204,7 +204,9 @@ print("Reflector away: ", end="")
 decode_status(away_status)
 prox_logic_away = away_status[2]  # proximity_logic
 
-print(f"PROX_LOGIC close={'1' if prox_logic_close else '0'}, away={'1' if prox_logic_away else '0'}")
+print(
+    f"PROX_LOGIC close={'1' if prox_logic_close else '0'}, away={'1' if prox_logic_away else '0'}"
+)
 
 if prox_logic_close and not prox_logic_away:
     print("TEST 5: PASS - PROX_LOGIC changes with distance")

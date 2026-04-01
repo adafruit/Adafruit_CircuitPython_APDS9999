@@ -18,6 +18,7 @@ Logic Mode ON (PS_LOGIC_MODE=1): PS Logic Output Mode.
   comparison state between measurements (no latching).
 """
 
+# ruff: noqa: E501
 import time
 
 import board
@@ -124,9 +125,7 @@ step_motor(HALF_ROT, direction=False)
 time.sleep(0.6)
 
 int_after_cross = int_pin.value
-print(
-    f"INT after crossing (should be LOW): {'HIGH - FAIL' if int_after_cross else 'LOW - OK'}"
-)
+print(f"INT after crossing (should be LOW): {'HIGH - FAIL' if int_after_cross else 'LOW - OK'}")
 
 # Check that INT LATCHES
 time.sleep(0.3)
@@ -188,14 +187,18 @@ time.sleep(0.1)
 # Reflector away - INT should be HIGH
 prox = read_prox_avg(sensor, 3)
 int_away1 = int_pin.value
-print(f"Reflector AWAY (prox={prox}) -> INT (should be HIGH): {'HIGH - OK' if int_away1 else 'LOW - FAIL'}")
+print(
+    f"Reflector AWAY (prox={prox}) -> INT (should be HIGH): {'HIGH - OK' if int_away1 else 'LOW - FAIL'}"
+)
 
 # Move close - INT should go LOW
 step_motor(HALF_ROT, direction=False)
 time.sleep(0.6)
 prox = read_prox_avg(sensor, 3)
 int_close1 = int_pin.value
-print(f"Reflector CLOSE (prox={prox}) -> INT (should be LOW): {'HIGH - FAIL' if int_close1 else 'LOW - OK'}")
+print(
+    f"Reflector CLOSE (prox={prox}) -> INT (should be LOW): {'HIGH - FAIL' if int_close1 else 'LOW - OK'}"
+)
 
 # Move away - INT should go HIGH again (no latch!)
 step_motor(HALF_ROT, direction=True)
@@ -217,7 +220,9 @@ time.sleep(0.5)
 prox = read_prox_avg(sensor, 3)
 int_away3 = int_pin.value
 
-print(f"Second cycle - CLOSE: {'HIGH' if int_close2 else 'LOW'}, AWAY: {'HIGH' if int_away3 else 'LOW'}")
+print(
+    f"Second cycle - CLOSE: {'HIGH' if int_close2 else 'LOW'}, AWAY: {'HIGH' if int_away3 else 'LOW'}"
+)
 
 if int_away1 and not int_close1 and int_away2 and not int_close2 and int_away3:
     print("PHASE 3: PASS - Following behavior correct")

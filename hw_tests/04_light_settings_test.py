@@ -133,9 +133,7 @@ for label, rate, expected_ms in rate_steps:
     actual_ms = int((end_time - start_time) * 1000)
 
     tolerance = expected_ms // 5  # 20%
-    timing_pass = (actual_ms >= expected_ms - tolerance) and (
-        actual_ms <= expected_ms + tolerance
-    )
+    timing_pass = (actual_ms >= expected_ms - tolerance) and (actual_ms <= expected_ms + tolerance)
 
     result = "PASS" if timing_pass else "FAIL"
     print(f"{label}\t\t{expected_ms}\t\t{actual_ms}\t{result}")

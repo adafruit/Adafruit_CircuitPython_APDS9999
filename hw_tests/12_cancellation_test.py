@@ -110,14 +110,10 @@ with_high_cancel = median_read(sensor)
 print(f"With cancel={high_cancel}: {with_high_cancel}")
 
 if with_high_cancel < with_low_cancel:
-    print(
-        f"Higher cancellation reduces more: PASS ({with_high_cancel} < {with_low_cancel})"
-    )
+    print(f"Higher cancellation reduces more: PASS ({with_high_cancel} < {with_low_cancel})")
     passed += 1
 else:
-    print(
-        f"Higher cancellation reduces more: FAIL ({with_high_cancel} not < {with_low_cancel})"
-    )
+    print(f"Higher cancellation reduces more: FAIL ({with_high_cancel} not < {with_low_cancel})")
     failed += 1
 
 sensor.proximity_cancellation = 0

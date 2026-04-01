@@ -194,7 +194,10 @@ print(f"ON-Follow:    {'PASS' if pass_logic_on_follow else 'FAIL'}")
 print(f"ON-NoLatch:   {'PASS' if pass_logic_on_no_latch else 'FAIL'}")
 
 all_pass = (
-    pass_logic_off_latch and pass_logic_off_clear and pass_logic_on_follow and pass_logic_on_no_latch
+    pass_logic_off_latch
+    and pass_logic_off_clear
+    and pass_logic_on_follow
+    and pass_logic_on_no_latch
 )
 
 print()

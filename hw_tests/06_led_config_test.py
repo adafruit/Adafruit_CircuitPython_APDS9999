@@ -166,14 +166,10 @@ prox_64pulse = median_read(sensor)
 print(f"Prox with 64 pulses: {prox_64pulse}")
 
 if prox_64pulse > prox_4pulse:
-    print(
-        f"Pulses affect readings: PASS (64 pulses {prox_64pulse} > 4 pulses {prox_4pulse})"
-    )
+    print(f"Pulses affect readings: PASS (64 pulses {prox_64pulse} > 4 pulses {prox_4pulse})")
     passed += 1
 else:
-    print(
-        f"Pulses affect readings: FAIL (64 pulses {prox_64pulse} not > 4 pulses {prox_4pulse})"
-    )
+    print(f"Pulses affect readings: FAIL (64 pulses {prox_64pulse} not > 4 pulses {prox_4pulse})")
     failed += 1
 
 print()

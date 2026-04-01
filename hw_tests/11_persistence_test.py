@@ -151,9 +151,7 @@ else:
 
         # Move reflector close, watching for interrupt during movement
         start_time = time.monotonic()
-        steps_taken, int_fired = step_motor(
-            HALF_ROT, direction=False, interrupt_pin=int_pin
-        )
+        steps_taken, int_fired = step_motor(HALF_ROT, direction=False, interrupt_pin=int_pin)
 
         if not int_fired:
             # Motor finished without interrupt - keep polling with timeout
@@ -188,14 +186,10 @@ else:
     print()
     print("--- Timing Test Results ---")
     print(
-        f"Persistence 1: {timing_results[0]} ms"
-        if timing_success[0]
-        else "Persistence 1: TIMEOUT"
+        f"Persistence 1: {timing_results[0]} ms" if timing_success[0] else "Persistence 1: TIMEOUT"
     )
     print(
-        f"Persistence 8: {timing_results[1]} ms"
-        if timing_success[1]
-        else "Persistence 8: TIMEOUT"
+        f"Persistence 8: {timing_results[1]} ms" if timing_success[1] else "Persistence 8: TIMEOUT"
     )
 
     if timing_success[0] and timing_success[1]:
