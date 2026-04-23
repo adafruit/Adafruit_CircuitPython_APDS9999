@@ -133,8 +133,7 @@ for i, (label, rate, prog_ms) in enumerate(rate_steps):
     # NOTE: Observed behavior shows ~3x actual vs programmed rate
     expected = prog_ms * 3
     tolerance = expected // 5  # 20%
-    if tolerance < 2:
-        tolerance = 2
+    tolerance = max(tolerance, 2)
     # For fastest rate, accept if faster than expected
     timing_pass = (i == 0 and actual_ms < expected) or (
         (actual_ms >= expected - tolerance) and (actual_ms <= expected + tolerance)

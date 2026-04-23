@@ -122,8 +122,7 @@ time.sleep(0.5)
 
 print(f"\nSensor initialised – PART_ID check passed")
 print(
-    f"Settings: resolution=18-bit, rate=200ms, gain=9x, "
-    f"neopixel brightness={NEOPIXEL_BRIGHTNESS}\n"
+    f"Settings: resolution=18-bit, rate=200ms, gain=9x, neopixel brightness={NEOPIXEL_BRIGHTNESS}\n"
 )
 
 # ---------------------------------------------------------------------------
@@ -195,7 +194,7 @@ passed = print_result(
     "All colour channels active (white balance)",
     white_balanced,
     f"r={r}, g={g}, b={b}, "
-    f"min threshold={threshold} ({int(WHITE_BALANCE_FRACTION*100)}% of max={white_max})",
+    f"min threshold={threshold} ({int(WHITE_BALANCE_FRACTION * 100)}% of max={white_max})",
 )
 all_passed = all_passed and passed
 results["white"] = (r, g, b, ir)
