@@ -844,10 +844,16 @@ interrupt is triggered to reset it."""
         return self._proximity_read_overflow
 
     def reset(self):
+        """Software reset the APDS9999.
+
+        Per Broadcom datasheet (p. 17), the device triggers reset immediately
+        and does not answer with an I2C ACK, so an OSError during write is expected.
         """
-        Software reset the APDS9999
-        """
-        self._reset = True
+        try:
+            self._reset = True
+        except OSError:
+            pass  # Expected: sensor resets before completing the I2C ACK
+
         time.sleep(0.01)
 
         # first read after reset will time out
